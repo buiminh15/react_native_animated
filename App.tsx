@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import * as React from 'react';
 import {
   StatusBar,
@@ -65,7 +66,19 @@ export default () => {
         renderItem={({item}) => {
           return (
             <View
-              style={{width, justifyContent: 'center', alignItems: 'center'}}>
+              style={{
+                width,
+                justifyContent: 'center',
+                alignItems: 'center',
+                shadowColor: '#000',
+                shadowOpacity: 0.5,
+                shadowOffset: {
+                  width: 0,
+                  height: 0,
+                },
+                shadowRadius: 20,
+                elevation: 3,
+              }}>
               <Image
                 source={{uri: item}}
                 style={{width: imageW, height: imageH}}
