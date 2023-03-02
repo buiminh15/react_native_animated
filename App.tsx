@@ -1,118 +1,121 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
-import React from 'react';
-import type {PropsWithChildren} from 'react';
+import * as React from 'react';
 import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
+  Image,
+  FlatList,
   View,
+  StatusBar,
+  Dimensions,
+  StyleSheet,
+  Animated,
 } from 'react-native';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+const {width, height} = Dimensions.get('screen');
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
+const ITEM_WIDTH = width;
+const ITEM_HEIGHT = height * 0.75;
 
-function Section({children, title}: SectionProps): JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+const DOT_SIZE = 8;
+const DOT_SPACING = 8;
+
+const DOT_INDICATOR_SIZE = DOT_SIZE + DOT_SPACING;
+
+const images = [
+  'https://static.zara.net/photos///2020/I/1/1/p/6543/610/091/2/w/2460/6543610091_1_1_1.jpg?ts=1606727905128',
+  'https://static.zara.net/photos///2020/I/1/1/p/6543/610/091/2/w/2460/6543610091_2_1_1.jpg?ts=1606727908993',
+  'https://static.zara.net/photos///2020/I/1/1/p/6543/610/091/2/w/2460/6543610091_2_2_1.jpg?ts=1606727889015',
+  'https://static.zara.net/photos///2020/I/1/1/p/6543/610/091/2/w/2460/6543610091_2_3_1.jpg?ts=1606727896369',
+  'https://static.zara.net/photos///2020/I/1/1/p/6543/610/091/2/w/2460/6543610091_2_4_1.jpg?ts=1606727898445',
+];
+
+const product = {
+  title: 'SOFT MINI CROSSBODY BAG WITH KISS LOCK',
+  description: [
+    'Mini crossbody bag available in various colours. Featuring two compartments. Handles and detachable crossbody shoulder strap. Lined interior. Clasp with two metal pieces.',
+    'Height x Length x Width: 14 x 21.5 x 4.5 cm. / 5.5 x 8.4 x 1.7"',
+  ],
+  price: '29.99£',
+};
+
+export default () => {
+  const scrollY = React.useRef(new Animated.Value(0)).current;
   return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
+    <View>
+      <StatusBar hidden />
+      <View style={{height: ITEM_HEIGHT, overflow: 'hidden'}}>
+        <Animated.FlatList
+          data={images}
+          onScroll={Animated.event(
+            [{nativeEvent: {contentOffset: {y: scrollY}}}],
+            {useNativeDriver: true},
+          )}
+          snapToInterval={ITEM_HEIGHT}
+          decelerationRate="fast"
+          showsVerticalScrollIndicator={false}
+          bounces={false}
+          keyExtractor={(_, index) => index.toString()}
+          renderItem={({item}) => {
+            return (
+              <View>
+                <Image source={{uri: item}} style={styles.image} />
+              </View>
+            );
+          }}
+        />
+        <View style={styles.pagination}>
+          {images.map((_, index) => {
+            return <View key={`dot-${index}`} style={[styles.dot]} />;
+          })}
+          <Animated.View
+            style={[
+              styles.dotIndicator,
+              {
+                transform: [
+                  {
+                    translateY: Animated.divide(
+                      scrollY,
+                      ITEM_HEIGHT,
+                    ).interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [0, DOT_INDICATOR_SIZE],
+                    }),
+                  },
+                ],
+              },
+            ]}
+          />
+        </View>
+      </View>
     </View>
   );
-}
-
-function App(): JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
-  return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
-  );
-}
+};
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  image: {
+    width: ITEM_WIDTH,
+    height: ITEM_HEIGHT,
+    resizeMode: 'cover',
   },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
+  pagination: {
+    position: 'absolute',
+    top: ITEM_HEIGHT / 2,
+    left: 20,
   },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
+  dot: {
+    width: DOT_SIZE,
+    height: DOT_SIZE,
+    borderRadius: DOT_SIZE,
+    backgroundColor: '#333',
+    marginBottom: DOT_SPACING,
   },
-  highlight: {
-    fontWeight: '700',
+  dotIndicator: {
+    width: DOT_INDICATOR_SIZE,
+    height: DOT_INDICATOR_SIZE,
+    borderRadius: DOT_INDICATOR_SIZE,
+    borderWidth: 1,
+    borderColor: '#333',
+
+    position: 'absolute',
+    top: -DOT_SIZE / 2,
+    left: -DOT_SIZE / 2,
   },
 });
-
-export default App;
