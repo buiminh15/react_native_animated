@@ -1,29 +1,30 @@
 import React from 'react';
-import {View, StyleSheet, Pressable} from 'react-native';
+import {Pressable} from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import Block from './Block';
+import TextView from './TextView';
 
 function HeaderBar() {
+  const handleBack = () => {
+    console.log('back');
+  };
+  const handleFavourite = () => {
+    console.log('handleFavourite');
+  };
+
   return (
-    <View style={[styles.container]}>
-      <Pressable>
+    <Block direction="row" height={50} middle justifyContent="space-between">
+      <Pressable onPress={handleBack}>
         <AntDesign size={30} name="arrowleft" color={'white'} />
       </Pressable>
-      <Pressable>
-        <AntDesign size={30} name="arrowleft" color={'white'} />
+      <TextView h5 color="white">
+        Energy Cloud
+      </TextView>
+      <Pressable onPress={handleFavourite}>
+        <AntDesign size={30} name="hearto" color={'white'} />
       </Pressable>
-      <Pressable>
-        <AntDesign size={30} name="arrowleft" color={'white'} />
-      </Pressable>
-    </View>
+    </Block>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    height: 50,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-});
 
 export default HeaderBar;
