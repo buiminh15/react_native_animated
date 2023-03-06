@@ -1,59 +1,57 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
-import React from 'react';
-import {Image, SafeAreaView, StyleSheet, Text} from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
-import {Colors} from './Colors';
-import Block from './components/Block';
-import HeaderBar from './components/HeaderBar';
-import Adidas from './assets/adidas.png';
-import TextView from './components/TextView';
-import AntDesign from 'react-native-vector-icons/AntDesign';
+import React, {useCallback, useEffect, useState} from 'react';
+import {FlatList, SafeAreaView, StyleSheet, Text} from 'react-native';
+import Item from './components/Item';
 
 const PADDING = 20;
+interface IPost {
+  body: string;
+  id: number;
+  title: string;
+  userId: number;
+}
 
 function App(): JSX.Element {
+  const [isGreen, setIsGreen] = useState(false);
+  const [title, setTitle] = useState('title');
+  const [data, setData] = useState<IPost[] | null>(null);
+
+  useEffect(() => {
+    try {
+      const fetchData = async () => {
+        const posts = await fetch('https://jsonplaceholder.typicode.com/posts');
+        return await posts.json();
+      };
+
+      fetchData().then((posts: IPost[]) => setData(posts));
+    } catch (error) {
+      console.error;
+    }
+  }, []);
+
+  const handleItemClick = useCallback((title: string) => {
+    setTitle(title);
+    console.log('📢 [App.tsx:31]', 'test');
+  }, []);
+  // const handleItemClick = (title: string) => {
+  //   setTitle(title);
+  //   console.log('📢 [App.tsx:31]', 'test');
+  // };
+
   return (
     <SafeAreaView style={styles.container}>
-      <LinearGradient
-        start={{x: 0, y: 0}}
-        end={{x: 1.2, y: 0}}
-        colors={[Colors.main, Colors.main1]}
-        style={styles.linearGradient}>
-        <HeaderBar />
-        <Block shadow style={styles.adidasContainer}>
-          <Image
-            resizeMode="cover"
-            source={Adidas}
-            alt="adidas shoes"
-            style={styles.img}
-          />
-        </Block>
-        <Block style={styles.ratingContainer}>
-          <TextView h6 color="#d3d3d3">
-            Rating
-          </TextView>
-          <Block direction="row" middle>
-            <AntDesign size={16} name="star" color={'yellow'} />
-            <TextView color="yellow" h6>
-              4.5
-            </TextView>
-            <TextView color="white" style={{marginLeft: 4}}>
-              (578 people)
-            </TextView>
-          </Block>
-        </Block>
-        <Block style={styles.ratingContainer} />
-        <Block style={styles.ratingContainer} />
-        <Block style={styles.ratingContainer} />
-        <Block style={styles.ratingContainer} />
-        <Block style={styles.ratingContainer} />
-      </LinearGradient>
+      <Text
+        style={[styles.text, isGreen && styles.greenText]}
+        onPress={() => setIsGreen(!isGreen)}>
+        {title}
+      </Text>
+      <FlatList
+        data={data}
+        renderItem={({item}) => {
+          return (
+            <Item key={item.id} item={item} handleClick={handleItemClick} />
+          );
+        }}
+      />
     </SafeAreaView>
   );
 }
@@ -61,6 +59,16 @@ function App(): JSX.Element {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#3f3f3f',
+  },
+  text: {
+    color: 'white',
+    textAlign: 'center',
+    fontSize: 24,
+    fontWeight: '700',
+  },
+  greenText: {
+    color: 'green',
   },
   linearGradient: {flex: 1, paddingHorizontal: PADDING, paddingTop: PADDING},
   adidasContainer: {
