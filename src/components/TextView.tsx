@@ -10,13 +10,13 @@ type TextViewProps = PropsWithChildren<{
   size?: number;
   bold?: boolean;
   center?: boolean;
-  style?: StyleProp<TextStyle>;
   h1?: boolean;
   h2?: boolean;
   h3?: boolean;
   h4?: boolean;
   h5?: boolean;
   h6?: boolean;
+  style?: StyleProp<TextStyle>;
 }>;
 
 function TextView({children, ...props}: TextViewProps) {
