@@ -6,6 +6,7 @@ import {IData} from '../App';
 import SubItem from './SubItem';
 
 const Item = ({item}: {item: IData}) => {
+  console.log('📢 [Item.tsx:9]', item);
   return (
     <View>
       <Text>{item.categoryName}</Text>

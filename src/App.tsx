@@ -26,7 +26,7 @@ function App(): JSX.Element {
   const [isGreen, setIsGreen] = useState(false);
   const [title, setTitle] = useState('title');
   const [data, setData] = useState<IData[] | null>(null);
-
+  console.log('📢 [App.tsx:29]', data);
   useEffect(() => {
     (async () => {
       try {
