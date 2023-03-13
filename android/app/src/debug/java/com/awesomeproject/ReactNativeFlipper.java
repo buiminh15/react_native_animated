@@ -6,6 +6,7 @@
  */
 package com.awesomeproject;
 
+import tech.bam.rnperformance.flipper.RNPerfMonitorPlugin;
 import android.content.Context;
 import com.facebook.flipper.android.AndroidFlipperClient;
 import com.facebook.flipper.android.utils.FlipperUtils;
@@ -37,6 +38,7 @@ public class ReactNativeFlipper {
       client.addPlugin(new DatabasesFlipperPlugin(context));
       client.addPlugin(new SharedPreferencesFlipperPlugin(context));
       client.addPlugin(CrashReporterPlugin.getInstance());
+      client.addPlugin(new RNPerfMonitorPlugin(reactInstanceManager));
 
       NetworkFlipperPlugin networkFlipperPlugin = new NetworkFlipperPlugin();
       NetworkingModule.setCustomClientBuilder(

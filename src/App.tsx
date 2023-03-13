@@ -1,3 +1,4 @@
+import {FlashList} from '@shopify/flash-list';
 import React, {useCallback, useEffect, useState} from 'react';
 import {FlatList, SafeAreaView, StyleSheet} from 'react-native';
 import CustomText from './components/CustomText';
@@ -59,7 +60,8 @@ function App(): JSX.Element {
         onPress={() => setIsGreen(!isGreen)}>
         {title}
       </CustomText>
-      <FlatList data={data} renderItem={renderItem} />
+      {/* <FlatList data={data} renderItem={renderItem} /> */}
+      <FlashList data={data} renderItem={renderItem} estimatedItemSize={100} />
     </SafeAreaView>
   );
 }
