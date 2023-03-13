@@ -1,5 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {FlatList, SafeAreaView, StyleSheet, Text} from 'react-native';
+import {FlatList, SafeAreaView, StyleSheet} from 'react-native';
+import CustomText from './components/CustomText';
 import Item from './components/Item';
 
 const PADDING = 20;
@@ -30,28 +31,35 @@ function App(): JSX.Element {
 
   const handleItemClick = useCallback((title: string) => {
     setTitle(title);
-    console.log('📢 [App.tsx:31]', 'test');
   }, []);
   // const handleItemClick = (title: string) => {
   //   setTitle(title);
   //   console.log('📢 [App.tsx:31]', 'test');
   // };
 
+  const renderItem = useCallback(
+    ({item}: {item: IPost}) => {
+      return (
+        <Item
+          key={item.id}
+          item={item}
+          handleClick={() => handleItemClick(item.title)}
+        />
+      );
+    },
+    [handleItemClick],
+  );
+
   return (
     <SafeAreaView style={styles.container}>
-      <Text
+      <CustomText
+        numberOfLines={1}
+        textType="bold"
         style={[styles.text, isGreen && styles.greenText]}
         onPress={() => setIsGreen(!isGreen)}>
         {title}
-      </Text>
-      <FlatList
-        data={data}
-        renderItem={({item}) => {
-          return (
-            <Item key={item.id} item={item} handleClick={handleItemClick} />
-          );
-        }}
-      />
+      </CustomText>
+      <FlatList data={data} renderItem={renderItem} />
     </SafeAreaView>
   );
 }
@@ -64,7 +72,7 @@ const styles = StyleSheet.create({
   text: {
     color: 'white',
     textAlign: 'center',
-    fontSize: 24,
+    fontSize: 32,
     fontWeight: '700',
   },
   greenText: {

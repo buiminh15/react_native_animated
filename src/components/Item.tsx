@@ -1,8 +1,9 @@
+import React from 'react';
 import {memo} from 'react';
 import {StyleSheet, Text, TouchableOpacity} from 'react-native';
 
 const Item = ({item, handleClick}: {item: IPost; handleClick: () => void}) => {
-  console.log('📢 [App.tsx:7]', 'render item');
+  console.log('📢 [Item.tsx:5]', 'item');
   return (
     <TouchableOpacity
       style={[styles.item]}
